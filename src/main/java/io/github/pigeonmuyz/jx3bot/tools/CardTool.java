@@ -3,6 +3,7 @@ package io.github.pigeonmuyz.jx3bot.tools;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.github.pigeonmuyz.jx3bot.entity.*;
+import io.github.pigeonmuyz.jx3bot.entity.request.ChivalrousRequest;
 import snw.jkook.message.component.card.CardBuilder;
 import snw.jkook.message.component.card.MultipleCardComponent;
 import snw.jkook.message.component.card.Size;
@@ -93,87 +94,44 @@ public class CardTool {
                     break;
                 //endregion
                 //region 日常相关实现
-                // @TODO 还没做其他服的！！也没迭代！
-
-//                case "日常":
-//                    initSaohua();
-//
-//                    DailyEntity de   = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/current?server="+server), DailyRequest.class).getData();
-//                    card.add(new CardBuilder()
-//                            .setTheme(Theme.PRIMARY)
-//                            .setSize(Size.LG)
-//                            .addModule(new HeaderModule(new PlainTextElement("PVE日常", false)))
-//                            .addModule(new SectionModule(new PlainTextElement("秘境日常："+de.getWar()), null, null))
-//                            .addModule(new SectionModule(new PlainTextElement("公共日常："+de.getTeam().get(0)), null, null))
-//                            .newCard()
-//                            .setTheme(Theme.DANGER)
-//                            .setSize(Size.LG)
-//                            .addModule(new HeaderModule(new PlainTextElement("PVP日常", false)))
-//                            .addModule(new SectionModule(new PlainTextElement("矿车：跨服•烂柯山"), null, null))
-//                            .addModule(new SectionModule(new PlainTextElement("战场："+de.getBattle()), null, null))
-//                            .newCard()
-//                            .setTheme(Theme.INFO)
-//                            .setSize(Size.LG)
-//                            .addModule(new HeaderModule(new PlainTextElement("PVX日常", false)))
-//                            .addModule(new SectionModule(new PlainTextElement("美人图："+de.getHuatu()), null, null))
-//                            .addModule(new SectionModule(new PlainTextElement("门派事件："+de.getSchool()), null, null))
-//                            .addModule(new SectionModule(new PlainTextElement("预测高概率摸宠："+de.getLuck()), null, null))
-//                            .newCard()
-//                            .setTheme(Theme.SUCCESS)
-//                            .setSize(Size.LG)
-//                            .addModule(new HeaderModule(new PlainTextElement("PVE周常", false)))
-//                            .addModule(new SectionModule(new PlainTextElement("五人秘境："+de.getTeam().get(1)), null, null))
-//                            .addModule(new SectionModule(new PlainTextElement("十人秘境："+de.getTeam().get(2)), null, null))
-//                            .newCard()
-//                            .setTheme(Theme.NONE)
-//                            .setSize(Size.LG)
-//                            .addModule(new ContextModule.Builder().add(new PlainTextElement("今天是"+de.getDate()+" 星期"+de.getWeek(), false)).build())
-//                            .addModule(DividerModule.INSTANCE)
-//                            .addModule(context)
-//                            .build());
-//                    break;
-                //endregion
-                //region 开服相关实现
-//                case "开服":
-//                    initSaohua();
-                    // @TODO 还没做其他服的！！
-//                    ServerEntity se = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/server/check?server="+server), ServerORequest.class).getData();
-//                    switch (se.getStatus()) {
-//                        case 0:
-//                            card.add(new CardBuilder()
-//                                    .setSize(Size.LG)
-//                                    .setTheme(Theme.WARNING)
-//                                    .addModule(new SectionModule(new PlainTextElement(se.getServer() + " 还在维护还在维护！机器人都要骂骂咧咧了！"), null, null))
-//                                    .newCard()
-//                                    .setTheme(Theme.NONE)
-//                                    .setSize(Size.LG)
-//                                    .addModule(context)
-//                                    .build());
-//                            break;
-//                        case 1:
-//                            card.add(new CardBuilder()
-//                                    .setSize(Size.LG)
-//                                    .setTheme(Theme.WARNING)
-//                                    .addModule(new SectionModule(new PlainTextElement(se.getServer() + "开服辣！快冲鸭！"), null, null))
-//                                    .newCard()
-//                                    .setTheme(Theme.NONE)
-//                                    .setSize(Size.LG)
-//                                    .addModule(context)
-//                                    .build());
-//                            break;
-//                        default:
-//                            card.add(new CardBuilder()
-//                                    .setSize(Size.LG)
-//                                    .setTheme(Theme.WARNING)
-//                                    .addModule(new SectionModule(new PlainTextElement("调用出错"), null, null))
-//                                    .newCard()
-//                                    .setTheme(Theme.NONE)
-//                                    .setSize(Size.LG)
-//                                    .addModule(context)
-//                                    .build());
-//                            break;
-//                    }
-//                    break;
+                case "日常":
+                    initSaohua();
+                    Type tempType = new TypeToken<Result<Daily>>(){}.getType();
+                    Result<Daily> rd   = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/current?server="+server), tempType);
+                    Daily de = rd.getData();
+                    card.add(new CardBuilder()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("PVE日常", false)))
+                            .addModule(new SectionModule(new PlainTextElement("秘境日常："+de.getWar()), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("公共日常："+de.getTeam().get(0)), null, null))
+                            .newCard()
+                            .setTheme(Theme.DANGER)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("PVP日常", false)))
+                            .addModule(new SectionModule(new PlainTextElement("矿车：跨服•烂柯山"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("战场："+de.getBattle()), null, null))
+                            .newCard()
+                            .setTheme(Theme.INFO)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("PVX日常", false)))
+                            .addModule(new SectionModule(new PlainTextElement("美人图："+de.getHuatu()), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("门派事件："+de.getSchool()), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("预测高概率摸宠："+de.getLuck()), null, null))
+                            .newCard()
+                            .setTheme(Theme.SUCCESS)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("PVE周常", false)))
+                            .addModule(new SectionModule(new PlainTextElement("五人秘境："+de.getTeam().get(1)), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("十人秘境："+de.getTeam().get(2)), null, null))
+                            .newCard()
+                            .setTheme(Theme.NONE)
+                            .setSize(Size.LG)
+                            .addModule(new ContextModule.Builder().add(new PlainTextElement("今天是"+de.getDate()+" 星期"+de.getWeek(), false)).build())
+                            .addModule(DividerModule.INSTANCE)
+                            .addModule(context)
+                            .build());
+                    break;
                 //endregion
                 //region 金价相关实现
                 case "金价":
@@ -236,7 +194,6 @@ public class CardTool {
                 case "团队招募":
                 case "招募":
                     initSaohua();
-                    // @TODO 还没做其他服的！！
                     results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/member/recruit?server="+server+"&token="+token+"&robot="+robot),newType);
                     switch (results.getCode()){
                         case 200:
@@ -263,41 +220,41 @@ public class CardTool {
                     break;
                 //endregion
                 //region 楚天行侠相关实现
-                // @TODO 行侠还没迭代！！！
-//                case "楚天行侠":
-//                case "楚天社":
-//                case "行侠":
-//                    initSaohua();
-//
-//                    ChivalrousRequest cr = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/chivalrous?token="+token), ChivalrousRequest.class);
-//                    card.add(new CardBuilder()
-//                            .setTheme(Theme.PRIMARY)
-//                            .setSize(Size.LG)
-//                            .addModule(new HeaderModule(new PlainTextElement("楚天行侠数据它来辣！")))
-//                            .build());
-//                    ChivalrousEntity ce = cr.getData().get("now");
-//
-//                    card.add(new CardBuilder()
-//                            .setTheme(Theme.PRIMARY)
-//                            .setSize(Size.LG)
-//                            .addModule(new HeaderModule(new PlainTextElement("现在正在"+ce.getMap()+"行侠仗义捏！")))
-//                            .addModule(new SectionModule(new PlainTextElement("事件："+ce.getDesc()),null,null))
-//                            .addModule(new SectionModule(new PlainTextElement("地点："+ce.getMap()+"·"+ce.getSite()),null,null))
-//                            .addModule(new SectionModule(new PlainTextElement("开始时间："+ce.getTime()),null,null))
-////                            .addModule(new CountdownModule(CountdownModule.Type.DAY, LocalDateTime.of(LocalDate.now(), LocalTime.parse(ce.getTime()).plusMinutes(4)).toInstant(ZoneOffset.ofHours(8)).toEpochMilli()))
-//                            .build());
-////                    System.out.println( LocalDateTime.of(LocalDate.now(),LocalTime.parse(ce.getTime())).toEpochSecond(ZoneOffset.UTC));
-//                    ce = cr.getData().get("next");
-//                    card.add(new CardBuilder()
-//                            .setTheme(Theme.PRIMARY)
-//                            .setSize(Size.LG)
-//                            .addModule(new HeaderModule(new PlainTextElement("即将到"+ce.getMap()+"行侠仗义捏！")))
-//                            .addModule(new SectionModule(new PlainTextElement("事件："+ce.getDesc()),null,null))
-//                            .addModule(new SectionModule(new PlainTextElement("地点："+ce.getMap()+"·"+ce.getSite()),null,null))
-//                            .addModule(new SectionModule(new PlainTextElement("开始时间："+ce.getTime()),null,null))
-////                            .addModule(new CountdownModule(CountdownModule.Type.DAY, LocalDateTime.of(LocalDate.now(), LocalTime.parse(ce.getTime()).plusMinutes(4)).toInstant(ZoneOffset.ofHours(8)).toEpochMilli()))
-//                            .build());
-//                    break;
+                // 迭代太麻烦了！开摆！！
+                case "楚天行侠":
+                case "楚天社":
+                case "行侠":
+                    initSaohua();
+
+                    ChivalrousRequest cr = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/chivalrous?token="+token), ChivalrousRequest.class);
+                    card.add(new CardBuilder()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("楚天行侠数据它来辣！")))
+                            .build());
+                    Chivalrous ce = cr.getData().get("now");
+
+                    card.add(new CardBuilder()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("现在正在"+ce.getMap()+"行侠仗义捏！")))
+                            .addModule(new SectionModule(new PlainTextElement("事件："+ce.getDesc()),null,null))
+                            .addModule(new SectionModule(new PlainTextElement("地点："+ce.getMap()+"·"+ce.getSite()),null,null))
+                            .addModule(new SectionModule(new PlainTextElement("开始时间："+ce.getTime()),null,null))
+//                            .addModule(new CountdownModule(CountdownModule.Type.DAY, LocalDateTime.of(LocalDate.now(), LocalTime.parse(ce.getTime()).plusMinutes(4)).toInstant(ZoneOffset.ofHours(8)).toEpochMilli()))
+                            .build());
+//                    System.out.println( LocalDateTime.of(LocalDate.now(),LocalTime.parse(ce.getTime())).toEpochSecond(ZoneOffset.UTC));
+                    ce = cr.getData().get("next");
+                    card.add(new CardBuilder()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("即将到"+ce.getMap()+"行侠仗义捏！")))
+                            .addModule(new SectionModule(new PlainTextElement("事件："+ce.getDesc()),null,null))
+                            .addModule(new SectionModule(new PlainTextElement("地点："+ce.getMap()+"·"+ce.getSite()),null,null))
+                            .addModule(new SectionModule(new PlainTextElement("开始时间："+ce.getTime()),null,null))
+//                            .addModule(new CountdownModule(CountdownModule.Type.DAY, LocalDateTime.of(LocalDate.now(), LocalTime.parse(ce.getTime()).plusMinutes(4)).toInstant(ZoneOffset.ofHours(8)).toEpochMilli()))
+                            .build());
+                    break;
                 //endregion
                 //region 更新日志相关实现
                 case "日志":
@@ -367,14 +324,61 @@ public class CardTool {
         try {
             initSaohua();
             switch (command[0]) {
+                // region 绑定服务器
                 case "绑定":
                     String tempServer = "";
+                    card.add(
+                            new CardBuilder()
+                                    .setSize(Size.LG)
+                                    .setTheme(Theme.SUCCESS)
+                                    .addModule(new SectionModule(new PlainTextElement("如果没有弹出错误信息，则绑定成功捏"),null,null))
+                                    .build()
+                    );
                     switch (command[1]){
                         case "飞龙在天":
                             tempServer = "飞龙在天";
                             break;
                         case "青梅煮酒":
                             tempServer = "青梅煮酒";
+                            break;
+                        case "天鹅坪":
+                            tempServer = "天鹅坪";
+                            break;
+                        case "破阵子":
+                            tempServer = "破阵子";
+                            break;
+                        case "绝代天骄":
+                            tempServer = "绝代天骄";
+                            break;
+                        case "横刀断浪":
+                            tempServer = "横刀断浪";
+                            break;
+                        case "梦江南":
+                            tempServer = "梦江南";
+                            break;
+                        case "唯我独尊":
+                            tempServer = "唯我独尊";
+                            break;
+                        case "斗转星移":
+                            tempServer = "斗转星移";
+                            break;
+                        case "乾坤一掷":
+                            tempServer = "乾坤一掷";
+                            break;
+                        case "幽月轮":
+                            tempServer = "幽月轮";
+                            break;
+                        case "剑胆琴心":
+                            tempServer = "剑胆琴心";
+                            break;
+                        case "蝶恋花":
+                            tempServer = "蝶恋花";
+                            break;
+                        case "龙争虎斗":
+                            tempServer = "龙争虎斗";
+                            break;
+                        case "长安城":
+                            tempServer = "长安城";
                             break;
                         default:
                             card.add(
@@ -400,14 +404,8 @@ public class CardTool {
                     tempGuild.add(guildID);
                     blindServerList.get(blindServerListIndex).put(tempServer,tempGuild);
                     settings.put("blind_server", blindServerList);
-                    card.add(
-                            new CardBuilder()
-                                .setSize(Size.LG)
-                                .setTheme(Theme.SUCCESS)
-                                .addModule(new SectionModule(new PlainTextElement("如果没有弹出错误信息，则绑定成功捏"),null,null))
-                                .build()
-                    );
-                    break;
+                break;
+                //endregion
                 //region 屏蔽广告！！
                 case "屏蔽":
                     for (String adminAcc :
@@ -561,89 +559,46 @@ public class CardTool {
                 //endregion
                 //region 团队招募相关实现
                 // @TODO 团队招募未更新！！！
-//                case "团队招募":
-//                case "招募":
-//                    initSaohua();
-//                    ServerTeamEntity ste = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/member/recruit?server="+server+"&keyword="+command[1]+"&token="+token), TAcitityRequest.class).getData();
-//                    card.add(new CardBuilder()
-//                            .setTheme(Theme.PRIMARY)
-//                            .setSize(Size.LG)
-//                            .addModule(new HeaderModule(new PlainTextElement(server+"目前的团队招募来辣！已经帮你排除掉金团辣！",false)))
-//                            .addModule(new HeaderModule(new PlainTextElement("以下是有关"+command[1]+"的团队招募信息辣！",false)))
-//                            .newCard()
-//                            .setTheme(Theme.NONE)
-//                            .setSize(Size.LG)
-//                            .addModule(context)
-//                            .build());
-//                    for (TeamActivityEntity tae:
-//                            ste.getData()) {
-//                        boolean mask = false;
-//                        for (String result :
-//                                MaskedWords) {
-//                            if (tae.getContent().contains(result)) {
-//                                mask = true;
-//                            }
-//                        }
-//                        if (mask){
-//                        }else{
-//                            card.add(new CardBuilder()
-//                                    .setTheme(Theme.PRIMARY)
-//                                    .setSize(Size.LG)
-//                                    .addModule(new SectionModule(new PlainTextElement("活动名称："+tae.getActivity(),false),null,null))
-//                                    .addModule(new SectionModule(new PlainTextElement("最低要求等级："+tae.getLevel(),false),null,null))
-//                                    .addModule(new SectionModule(new PlainTextElement("队长："+tae.getLeader(),false),null,null))
-//                                    .addModule(new SectionModule(new PlainTextElement("人数："+tae.getNumber()+"/"+tae.getMaxNumber(),false),null,null))
-//                                    .addModule(new SectionModule(new PlainTextElement("招募信息："+tae.getContent(),false),null,null))
-//                                    .build());
-//                        }
-//                    }
-//                    break;
+                case "团队招募":
+                case "招募":
+                    initSaohua();
+                    Type tempType = new TypeToken<Result<ServerTeam>>(){}.getType();
+                    Result<ServerTeam> rst = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/member/recruit?server="+server+"&keyword="+command[1]+"&token="+token), tempType);
+                    ServerTeam st = rst.getData();
+                    card.add(new CardBuilder()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement(server+"目前的团队招募来辣！已经帮你排除掉金团辣！",false)))
+                            .addModule(new HeaderModule(new PlainTextElement("以下是有关"+command[1]+"的团队招募信息辣！",false)))
+                            .newCard()
+                            .setTheme(Theme.NONE)
+                            .setSize(Size.LG)
+                            .addModule(context)
+                            .build());
+                    for (TeamActivity ta:
+                            st.getData()) {
+                        boolean mask = false;
+                        for (String result :
+                                MaskedWords) {
+                            if (ta.getContent().contains(result)) {
+                                mask = true;
+                            }
+                        }
+                        if (mask){
+                        }else{
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new SectionModule(new PlainTextElement("活动名称："+ta.getActivity(),false),null,null))
+                                    .addModule(new SectionModule(new PlainTextElement("最低要求等级："+ta.getLevel(),false),null,null))
+                                    .addModule(new SectionModule(new PlainTextElement("队长："+ta.getLeader(),false),null,null))
+                                    .addModule(new SectionModule(new PlainTextElement("人数："+ta.getNumber()+"/"+ta.getMaxNumber(),false),null,null))
+                                    .addModule(new SectionModule(new PlainTextElement("招募信息："+ta.getContent(),false),null,null))
+                                    .build());
+                        }
+                    }
+                    break;
                 //endregion
-                //region 开服相关实现未更新
-                // @TODO 开服实现未更新
-//                case "开服":
-//                    initSaohua();
-//                    ServerEntity se = null;
-//                    System.out.println("1");
-//                    se = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/server/check?server="+command[1]), ServerORequest.class).getData();
-//                    System.out.println(se.getStatus());
-//                    switch (se.getStatus()) {
-//                        case 0:
-//                            card.add(new CardBuilder()
-//                                    .setSize(Size.LG)
-//                                    .setTheme(Theme.WARNING)
-//                                    .addModule(new SectionModule(new PlainTextElement(se.getServer() + " 还在维护还在维护！机器人都要骂骂咧咧了！"), null, null))
-//                                    .newCard()
-//                                    .setTheme(Theme.NONE)
-//                                    .setSize(Size.LG)
-//                                    .addModule(context)
-//                                    .build());
-//                            break;
-//                        case 1:
-//                            card.add(new CardBuilder()
-//                                    .setSize(Size.LG)
-//                                    .setTheme(Theme.WARNING)
-//                                    .addModule(new SectionModule(new PlainTextElement(se.getServer() + "开服辣！快冲鸭！"), null, null))
-//                                    .newCard()
-//                                    .setTheme(Theme.NONE)
-//                                    .setSize(Size.LG)
-//                                    .addModule(context)
-//                                    .build());
-//                            break;
-//                        default:
-//                            card.add(new CardBuilder()
-//                                    .setSize(Size.LG)
-//                                    .setTheme(Theme.WARNING)
-//                                    .addModule(new SectionModule(new PlainTextElement("调用出错"), null, null))
-//                                    .newCard()
-//                                    .setTheme(Theme.NONE)
-//                                    .setSize(Size.LG)
-//                                    .addModule(context)
-//                                    .build());
-//                            break;
-//                    }
-//                    break;
-                //endregion 未更新
                 //region 装备查询
                 case "查询":
                     initSaohua();
