@@ -1,5 +1,9 @@
 package io.github.pigeonmuyz.jx3bot.entity;
 
+/**
+ * 普通Http请求的工具类
+ * @param <T>
+ */
 public class Result<T> {
     int code;
     String message;
