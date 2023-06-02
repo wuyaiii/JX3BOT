@@ -3,6 +3,7 @@ package io.github.pigeonmuyz.jx3bot;
 import io.github.pigeonmuyz.jx3bot.event.MessageEvent;
 import io.github.pigeonmuyz.jx3bot.utils.WebSocketUtils;
 import org.yaml.snakeyaml.Yaml;
+import snw.jkook.command.JKookCommand;
 import snw.jkook.plugin.BasePlugin;
 
 import java.io.*;
