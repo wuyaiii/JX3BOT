@@ -3,7 +3,10 @@ package io.github.pigeonmuyz.jx3bot.event;
 import com.google.gson.Gson;
 import io.github.pigeonmuyz.jx3bot.Main;
 import io.github.pigeonmuyz.jx3bot.tools.CardTool;
+import io.github.pigeonmuyz.jx3bot.tools.HttpTool;
 import snw.jkook.Core;
+import snw.jkook.JKook;
+import snw.jkook.entity.User;
 import snw.jkook.event.EventHandler;
 import snw.jkook.event.Listener;
 import snw.jkook.event.channel.ChannelMessageEvent;
@@ -51,7 +54,16 @@ public class MessageEvent implements Listener {
                   则进入该方法体
                  */
             cardMessage = CardTool.singleCommand(cme.getMessage().getComponent().toString(),cme.getMessage().getSender().getId(),cme.getChannel().getId(),server);
-            messageTool(cardMessage, cme);
+            for (MultipleCardComponent card:
+                    cardMessage) {
+                cme.getMessage().sendToSource(card);
+            }
+            cardMessage.clear();
+        }
+        String[] commands = cme.getMessage().getComponent().toString().split(" ");
+        if (commands.length >=2 && commands[0].equalsIgnoreCase(".send" )&& cme.getMessage().getSender().getId().equals("1787060816")){
+            User user = JKook.getCore().getHttpAPI().getUser(commands[1]);
+            user.sendPrivateMessage(commands[2]);
         }
     }
 
@@ -78,20 +90,6 @@ public class MessageEvent implements Listener {
                   则进入该方法体
                  */
             cardMessage = CardTool.singleCommand(pmre.getMessage().getComponent().toString(),pmre.getMessage().getSender().getId(),null,server);
-            messageTool(cardMessage, pmre);
-        }
-    }
-
-    void messageTool(List<MultipleCardComponent> cardMessage, Object toSender){
-        if (toSender instanceof ChannelMessageEvent){
-            ChannelMessageEvent cme = (ChannelMessageEvent) toSender;
-            for (MultipleCardComponent card:
-                    cardMessage) {
-                cme.getMessage().sendToSource(card);
-            }
-            cardMessage.clear();
-        }else{
-            PrivateMessageReceivedEvent pmre = (PrivateMessageReceivedEvent) toSender;
             for (MultipleCardComponent card:
                     cardMessage) {
                 pmre.getMessage().sendToSource(card);
