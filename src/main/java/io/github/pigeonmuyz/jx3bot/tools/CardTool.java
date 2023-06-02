@@ -264,9 +264,9 @@ public class CardTool {
                     card.add(new CardBuilder()
                             .setTheme(Theme.PRIMARY)
                             .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.0")))
+                            .addModule(new HeaderModule(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.1")))
                             .addModule(new SectionModule(new PlainTextElement("1. 部分功能惨招删除！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("2. 将原来的💩山代码删除进行了重构！"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("2. 紧急修复了6.2中午的报错！！"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("3. 增加了管理员专属指令！"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("4. 加入消息推送服务辣，现在可以订阅开服监控之类的东西辣！"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("5. 即将增加赞助辣！（只收取订阅服务所需+它的1%的费用作为服务器费用！）"), null, null))
@@ -356,6 +356,7 @@ public class CardTool {
                         case "梦江南":
                             tempServer = "梦江南";
                             break;
+                        case "唯满侠":
                         case "唯我独尊":
                             tempServer = "唯我独尊";
                             break;
