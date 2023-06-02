@@ -47,14 +47,15 @@ public class MessageEvent implements Listener {
                   则代表当前指令为多层
                   则进入该方法体
                  */
-            if (cardMessage.isEmpty()){
-                return;
-            }
+
             if (commands[1].equals("绑定")){
                 cme.getMessage().reply("如果没有看到报错的消息就是绑定成功了！！");
                 cme.getMessage().sendToSource("绑定的提示消息被飞龙的臭鸽子吃了！");
             }
             cardMessage = CardTool.multiCommand(cme.getMessage().getComponent().toString().split(" "),cme.getMessage().getSender().getId(),cme.getChannel().getGuild().getId(),server);
+            if (cardMessage.isEmpty()){
+                return;
+            }
         }else{
                 /*
                   如果用户发送指令，例：花价
