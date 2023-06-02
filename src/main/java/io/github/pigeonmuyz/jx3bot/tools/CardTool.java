@@ -327,17 +327,13 @@ public class CardTool {
                 // region 绑定服务器
                 case "绑定":
                     String tempServer = "";
-                    card.add(
-                            new CardBuilder()
-                                    .setSize(Size.LG)
-                                    .setTheme(Theme.SUCCESS)
-                                    .addModule(new SectionModule(new PlainTextElement("如果没有弹出错误信息，则绑定成功捏"),null,null))
-                                    .build()
-                    );
                     switch (command[1]){
+                        case "双二":
+                        case "飞龙":
                         case "飞龙在天":
                             tempServer = "飞龙在天";
                             break;
+                        case "青梅":
                         case "青梅煮酒":
                             tempServer = "青梅煮酒";
                             break;
@@ -366,6 +362,8 @@ public class CardTool {
                         case "乾坤一掷":
                             tempServer = "乾坤一掷";
                             break;
+                        case "圣墓山":
+                        case "电五":
                         case "幽月轮":
                             tempServer = "幽月轮";
                             break;
