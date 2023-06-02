@@ -102,13 +102,13 @@ public class WebSocketUtils implements WebSocket.Listener {
                 messageType = "server_status";
                 Wss<ServerStatus> ssResult = gson.fromJson(message, new TypeToken<Wss<ServerStatus>>(){}.getType());
                 ss = ssResult.getData();
-                if (ss.getStatus() == 1){
+                if (ss.getStatus() == 1 && ss.getServer().equals("飞龙在天")){
                     mcc = new CardBuilder()
                             .setTheme(Theme.SUCCESS)
                             .setSize(Size.LG)
                             .addModule(new SectionModule(new PlainTextElement("游戏现在开服了！！！"),null,null))
                             .build();
-                }else{
+                }else if (ss.getStatus() == 0 && ss.getServer().equals("飞龙在天")){
                     mcc = new CardBuilder()
                             .setTheme(Theme.WARNING)
                             .setSize(Size.LG)
@@ -124,8 +124,8 @@ public class WebSocketUtils implements WebSocket.Listener {
                         .setTheme(Theme.WARNING)
                         .setSize(Size.LG)
                         .addModule(new SectionModule(new PlainTextElement(news.getType()+"："+news.getTitle()),null,null))
-                        .addModule(new SectionModule(new PlainTextElement("链接："+news.getUrl()),null,null))
                         .addModule(new SectionModule(new PlainTextElement("时间："+news.getDate()),null,null))
+                        .addModule(new SectionModule(new MarkdownElement("[原文传送门🚪]("+news.getUrl()+")")))
                         .build();
                 break;
             case 2003:
