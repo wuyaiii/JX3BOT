@@ -268,7 +268,8 @@ public class CardTool {
                             .addModule(new SectionModule(new PlainTextElement("1. 部分功能惨招删除！"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("2. 修复了部分指令会发不出的问题！！"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("3. 加入消息推送服务辣，现在可以订阅开服监控之类的东西辣！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("4. 即将增加赞助辣！（只收取订阅服务所需+它的1%的费用作为服务器费用！）"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("4. 增加了JJC战绩查询"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("5. 即将增加赞助辣！（只收取订阅服务所需+它的1%的费用，不使用诸恶、攻防类订阅服务就完全不要钱！）"), null, null))
                             .newCard()
                             .setTheme(Theme.NONE)
                             .setSize(Size.LG)
@@ -284,23 +285,38 @@ public class CardTool {
                     card.add(new CardBuilder()
                             .setTheme(Theme.PRIMARY)
                             .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.0", false)))
-                            .addModule(new SectionModule(new PlainTextElement("角色装备：查询 [服务器(可选)] [玩家名字(必选)]"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("绑定服务器：绑定 [服务器(必选)]"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("查询花价：花价 [地图名称(枫叶泊需要完整名称，可不打点)(非必选！！！)]"), null, null))
+                            .addModule(new HeaderModule(new PlainTextElement("通用类", false)))
                             .addModule(new SectionModule(new PlainTextElement("查询日常：日常"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("查宏指令：宏 [心法前两字(必选)] 该功能目前是测试状态！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("查询金价：金价 [服务器(可选)]"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("楚天行侠：行侠|楚天社|楚天行侠"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("绑定服务器：绑定 [服务器(必选)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("物品价格：物价 [物品名称|物品别名(必选)]"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("宠物游历：游历 [地图(必选)]"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("角色装备：查询 [服务器(可选)] [玩家名字(必选)]"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("查询金价：金价 [服务器(可选)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("查询奇遇：奇遇 [服务器(可选)] [玩家名字(必选)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("订阅监控：全部订阅[首次订阅将会立即生效]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("团队招募：招募|团队招募 [副本名(可选，例：西津渡)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("查询日志：[日志|更新日志|Version]"), null, null))
                             .newCard()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("PVE类", false)))
+                            .addModule(new SectionModule(new PlainTextElement("查宏指令：宏 [心法前两字(必选)] 该功能目前是测试状态！"), null, null))
+                            .newCard()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("PVP类", false)))
+                            .addModule(new SectionModule(new PlainTextElement("JJC战绩：JJC｜战绩 [玩家名(必选)] [模式，例如22｜33｜55(如果需要查其他服则必选)] [服务器(可选)]"), null, null))
+                            .newCard()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("PVX类", false)))
+                            .addModule(new SectionModule(new PlainTextElement("查询花价：花价 "), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("楚天行侠：行侠|楚天社|楚天行侠"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("宠物游历：游历 [地图(必选)]"), null, null))
+                            .newCard()
                             .setTheme(Theme.NONE)
                             .setSize(Size.LG)
+                            .addModule(new ContextModule.Builder().add(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.1", false)).build())
+                            .addModule(DividerModule.INSTANCE)
                             .addModule(context)
                             .build());
                     break;
@@ -602,6 +618,42 @@ public class CardTool {
                         results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/luck/adventure?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
                     }else{
                         results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/luck/adventure?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
+                    }
+                    switch (results.getCode()){
+                        case 200:
+                            imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.NONE)
+                                    .setSize(Size.LG)
+                                    .addModule(new ImageGroupModule(imagesList))
+                                    .newCard()
+                                    .setTheme(Theme.NONE)
+                                    .setSize(Size.LG)
+                                    .addModule(context)
+                                    .build());
+                            break;
+                        default:
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.DANGER)
+                                    .setSize(Size.LG)
+                                    .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"),null,null))
+                                    .build());
+                            break;
+                    }
+                    break;
+                //endregion
+                //region JJC战绩
+                case "竞技场":
+                case "名剑":
+                case "战绩":
+                case "JJC":
+                    initSaohua();
+                    if (command.length==3){
+                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot+"&mode="+command[2]),newType);
+                    }else if (command.length == 4){
+                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+command[3]+"&name="+command[1]+"&robot="+robot+"&mode="+command[2]),newType);
+                    }else if (command.length <3){
+                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
                     }
                     switch (results.getCode()){
                         case 200:
