@@ -264,12 +264,11 @@ public class CardTool {
                     card.add(new CardBuilder()
                             .setTheme(Theme.PRIMARY)
                             .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.1")))
+                            .addModule(new HeaderModule(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.1 （开发版本号：1033）")))
                             .addModule(new SectionModule(new PlainTextElement("1. 部分功能惨招删除！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("2. 紧急修复了6.2中午的报错！！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("3. 增加了管理员专属指令！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("4. 加入消息推送服务辣，现在可以订阅开服监控之类的东西辣！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("5. 即将增加赞助辣！（只收取订阅服务所需+它的1%的费用作为服务器费用！）"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("2. 修复了部分指令会发不出的问题！！"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("3. 加入消息推送服务辣，现在可以订阅开服监控之类的东西辣！"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("4. 即将增加赞助辣！（只收取订阅服务所需+它的1%的费用作为服务器费用！）"), null, null))
                             .newCard()
                             .setTheme(Theme.NONE)
                             .setSize(Size.LG)
@@ -332,52 +331,157 @@ public class CardTool {
                         case "飞龙":
                         case "飞龙在天":
                             tempServer = "飞龙在天";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "青梅":
                         case "青梅煮酒":
                             tempServer = "青梅煮酒";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "天鹅坪":
                             tempServer = "天鹅坪";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "破阵子":
                             tempServer = "破阵子";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "绝代天骄":
                             tempServer = "绝代天骄";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "横刀断浪":
                             tempServer = "横刀断浪";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "梦江南":
                             tempServer = "梦江南";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "唯满侠":
                         case "唯我独尊":
                             tempServer = "唯我独尊";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "斗转星移":
                             tempServer = "斗转星移";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "乾坤一掷":
                             tempServer = "乾坤一掷";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "圣墓山":
                         case "电五":
                         case "幽月轮":
                             tempServer = "幽月轮";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "剑胆琴心":
                             tempServer = "剑胆琴心";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "蝶恋花":
                             tempServer = "蝶恋花";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "龙争虎斗":
                             tempServer = "龙争虎斗";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         case "长安城":
                             tempServer = "长安城";
+                            card.add(
+                                    new CardBuilder()
+                                            .setSize(Size.LG)
+                                            .setTheme(Theme.SUCCESS)
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .build()
+                            );
                             break;
                         default:
                             card.add(
