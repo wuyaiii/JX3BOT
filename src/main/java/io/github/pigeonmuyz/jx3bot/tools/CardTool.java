@@ -436,6 +436,8 @@ public class CardTool {
                                             .build()
                             );
                             break;
+                        case "双梦":
+                        case "双梦镇":
                         case "梦江南":
                             tempServer = "梦江南";
                             card.add(
