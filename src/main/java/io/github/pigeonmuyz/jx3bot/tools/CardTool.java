@@ -294,7 +294,7 @@ public class CardTool {
                             .addModule(new SectionModule(new PlainTextElement("查询金价：金价 [服务器(可选)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("查询奇遇：奇遇 [服务器(可选)] [玩家名字(必选)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("订阅监控：全部订阅[首次订阅将会立即生效]"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("团队招募：招募|团队招募 [副本名(可选，例：西津渡)]"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("团队招募：招募|团队招募 [服务器名（可选）] [副本名(可选，例：西津渡)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("查询日志：[日志|更新日志|Version]"), null, null))
                             .newCard()
                             .setTheme(Theme.PRIMARY)
@@ -325,7 +325,33 @@ public class CardTool {
                             .build());
                     break;
                 //endregion
-
+                //region 开服状态查询
+                case "开服":
+                    initSaohua();
+                    tempType = new TypeToken<Result<ServerSwitch>>(){}.getType();
+                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/current?server="+server), tempType);
+                    if (resultServer.getCode() == 200){
+                        ServerSwitch ss = resultServer.getData();
+                        card.add(new CardBuilder()
+                                .setTheme(Theme.NONE)
+                                .setSize(Size.LG)
+                                .addModule(new HeaderModule(new PlainTextElement(server+" 当前状态："+ ss.getStatus(), false)))
+                                .newCard()
+                                .setTheme(Theme.NONE)
+                                .setSize(Size.LG)
+                                .addModule(new ContextModule.Builder().add(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.2", false)).build())
+                                .addModule(DividerModule.INSTANCE)
+                                .addModule(context)
+                                .build());
+                    }else{
+                        card.add(new CardBuilder()
+                                .setSize(Size.LG)
+                                .setTheme(Theme.DANGER)
+                                .addModule(new HeaderModule(new PlainTextElement("服务器未响应")))
+                                .build());
+                    }
+                    break;
+                //endregion
             }
             imagesList.clear();
         } catch (Exception e) {
@@ -416,7 +442,7 @@ public class CardTool {
                                     new CardBuilder()
                                             .setSize(Size.LG)
                                             .setTheme(Theme.SUCCESS)
-                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用"+robot),null,null))
                                             .build()
                             );
                             break;
@@ -427,7 +453,7 @@ public class CardTool {
                                     new CardBuilder()
                                             .setSize(Size.LG)
                                             .setTheme(Theme.SUCCESS)
-                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用"+robot),null,null))
                                             .build()
                             );
                             break;
@@ -437,7 +463,7 @@ public class CardTool {
                                     new CardBuilder()
                                             .setSize(Size.LG)
                                             .setTheme(Theme.SUCCESS)
-                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用"+robot),null,null))
                                             .build()
                             );
                             break;
@@ -447,7 +473,7 @@ public class CardTool {
                                     new CardBuilder()
                                             .setSize(Size.LG)
                                             .setTheme(Theme.SUCCESS)
-                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用"+robot),null,null))
                                             .build()
                             );
                             break;
@@ -459,7 +485,7 @@ public class CardTool {
                                     new CardBuilder()
                                             .setSize(Size.LG)
                                             .setTheme(Theme.SUCCESS)
-                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用"+robot),null,null))
                                             .build()
                             );
                             break;
@@ -469,7 +495,7 @@ public class CardTool {
                                     new CardBuilder()
                                             .setSize(Size.LG)
                                             .setTheme(Theme.SUCCESS)
-                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用"+robot),null,null))
                                             .build()
                             );
                             break;
@@ -479,7 +505,7 @@ public class CardTool {
                                     new CardBuilder()
                                             .setSize(Size.LG)
                                             .setTheme(Theme.SUCCESS)
-                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用"+robot),null,null))
                                             .build()
                             );
                             break;
@@ -489,7 +515,7 @@ public class CardTool {
                                     new CardBuilder()
                                             .setSize(Size.LG)
                                             .setTheme(Theme.SUCCESS)
-                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用"+robot),null,null))
                                             .build()
                             );
                             break;
@@ -499,7 +525,7 @@ public class CardTool {
                                     new CardBuilder()
                                             .setSize(Size.LG)
                                             .setTheme(Theme.SUCCESS)
-                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用+"+robot),null,null))
+                                            .addModule(new SectionModule(new PlainTextElement("绑定服务器："+command[1]+"成功，欢迎大佬使用"+robot),null,null))
                                             .build()
                             );
                             break;
@@ -511,7 +537,9 @@ public class CardTool {
                                             .addModule(new SectionModule(new PlainTextElement("服务器绑定失误，请尝试输入服务器官方全称，"),null,null))
                                             .build()
                             );
-                            break;
+                            System.out.println("又触发-1！！！");
+                            System.out.println("用户ID: "+userID+" 尝试的绑定的服务器: "+command[1]);
+                            return card;
                     }
                     List<String> tempGuild = new ArrayList<>();
                     List<Map<String, List<String>>> blindServerList = (List<Map<String, List<String>>>) settings.get("blind_server");
@@ -528,6 +556,18 @@ public class CardTool {
                     blindServerList.get(blindServerListIndex).put(tempServer,tempGuild);
                     settings.put("blind_server", blindServerList);
                 break;
+                //endregion
+                //region 建议
+                case "建议":
+                    card.add(new CardBuilder()
+                            .setSize(Size.LG)
+                            .setTheme(Theme.SUCCESS)
+                            .addModule(new SectionModule(new PlainTextElement( "意见反馈成功！"),null,null))
+                            .addModule(DividerModule.INSTANCE)
+                            .addModule(new SectionModule(new PlainTextElement("作者将会通过机器人私聊回复当前建议是否可用！！！"),null,null))
+                            .build());
+                    System.out.println("用户【"+userID+"】建议："+command[1]);
+                    break;
                 //endregion
                 //region 屏蔽广告！！
                 case "屏蔽":
@@ -722,7 +762,12 @@ public class CardTool {
                 case "招募":
                     initSaohua();
                     Type tempType = new TypeToken<Result<ServerTeam>>(){}.getType();
-                    Result<ServerTeam> rst = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/member/recruit?server="+server+"&keyword="+command[1]+"&token="+token), tempType);
+                    Result<ServerTeam> rst = null;
+                    if (command.length>=3){
+                        rst = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/member/recruit?server="+command[1]+"&keyword="+command[2]+"&token="+token), tempType);
+                    }else{
+                        rst = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/member/recruit?server="+server+"&keyword="+command[1]+"&token="+token), tempType);
+                    }
                     ServerTeam st = rst.getData();
                     card.add(new CardBuilder()
                             .setTheme(Theme.PRIMARY)
@@ -821,6 +866,33 @@ public class CardTool {
                                     .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"), null, null))
                                     .build());
                             break;
+                    }
+                    break;
+                //endregion
+                //region 开服状态查询
+                case "开服":
+                    initSaohua();
+                    tempType = new TypeToken<Result<ServerSwitch>>(){}.getType();
+                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/current?server="+server), tempType);
+                    if (resultServer.getCode() == 200){
+                        ServerSwitch ss = resultServer.getData();
+                        card.add(new CardBuilder()
+                                .setTheme(Theme.NONE)
+                                .setSize(Size.LG)
+                                .addModule(new HeaderModule(new PlainTextElement(server+" 当前状态："+ ss.getStatus(), false)))
+                                .newCard()
+                                .setTheme(Theme.NONE)
+                                .setSize(Size.LG)
+                                .addModule(new ContextModule.Builder().add(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.2", false)).build())
+                                .addModule(DividerModule.INSTANCE)
+                                .addModule(context)
+                                .build());
+                    }else{
+                        card.add(new CardBuilder()
+                                .setSize(Size.LG)
+                                .setTheme(Theme.DANGER)
+                                .addModule(new HeaderModule(new PlainTextElement("服务器未响应")))
+                                .build());
                     }
                     break;
                 //endregion

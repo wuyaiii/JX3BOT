@@ -7,6 +7,7 @@ import io.github.pigeonmuyz.jx3bot.tools.HttpTool;
 import snw.jkook.Core;
 import snw.jkook.JKook;
 import snw.jkook.entity.User;
+import snw.jkook.entity.channel.TextChannel;
 import snw.jkook.event.EventHandler;
 import snw.jkook.event.Listener;
 import snw.jkook.event.channel.ChannelMessageEvent;
@@ -36,8 +37,12 @@ public class MessageEvent implements Listener {
     @EventHandler
     public void channelMessage(ChannelMessageEvent cme){
         //判断当前服务器是否绑定
-        validBindServer(cme.getChannel().getGuild().getId());
+        boolean validBind = validBindServer(cme.getChannel().getGuild().getId());
         String[] commands = cme.getMessage().getComponent().toString().split(" ");
+        if (commands.length>=2 && commands[0].equals("绑定") && validBind){
+            cme.getMessage().reply("请勿重复绑定，重复绑定将会造成服务器资源浪费哦！");
+            return;
+        }
             /*
               判断指令
              */
@@ -78,6 +83,16 @@ public class MessageEvent implements Listener {
             User user = JKook.getCore().getHttpAPI().getUser(commands[1]);
             user.sendPrivateMessage(commands[2]);
         }
+        if (commands.length >= 2 && commands[0].equalsIgnoreCase(".send")){
+            switch (commands[1]){
+                case "频道":
+                    TextChannel tc = (TextChannel) JKook.getHttpAPI().getChannel(commands[2]);
+                    tc.sendComponent(commands[3]);
+                    break;
+                case "用户":
+                    break;
+            }
+        }
     }
 
     @EventHandler
@@ -116,7 +131,7 @@ public class MessageEvent implements Listener {
         }
     }
 
-    void validBindServer(String guildId){
+    Boolean validBindServer(String guildId){
         List<Map<String, List<String>>> blindServerList = (List<Map<String, List<String>>>) settings.get("blind_server");
         try{
             for (Map<String,List<String>> serverBlink:
@@ -129,11 +144,15 @@ public class MessageEvent implements Listener {
                 if (values.contains(guildId)) {
                     // 执行操作
                     server = key;
+                    return true;
+                }else{
+
                 }
             }
-        }catch(Exception e){
+        }catch(Exception e) {
             System.out.println("绑定服务器为空捏");
         }
+        return false;
     }
 
 }
