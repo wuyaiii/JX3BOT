@@ -43,6 +43,18 @@ public class MessageEvent implements Listener {
             cme.getMessage().reply("请勿重复绑定，重复绑定将会造成服务器资源浪费哦！");
             return;
         }
+        if (commands.length >= 2 && commands[0].equalsIgnoreCase(".send")&& cme.getMessage().getSender().getId().equals("1787060816")){
+            switch (commands[1]){
+                case "频道":
+                    TextChannel tc = (TextChannel) JKook.getHttpAPI().getChannel(commands[2]);
+                    tc.sendComponent(commands[3]);
+                    break;
+                case "用户":
+                    User user = JKook.getHttpAPI().getUser(commands[2]);
+                    user.sendPrivateMessage(commands[3]);
+                    break;
+            }
+        }
             /*
               判断指令
              */
@@ -79,20 +91,7 @@ public class MessageEvent implements Listener {
             }
             cardMessage.clear();
         }
-        if (commands.length >=2 && commands[0].equalsIgnoreCase(".send" )&& cme.getMessage().getSender().getId().equals("1787060816")){
-            User user = JKook.getCore().getHttpAPI().getUser(commands[1]);
-            user.sendPrivateMessage(commands[2]);
-        }
-        if (commands.length >= 2 && commands[0].equalsIgnoreCase(".send")){
-            switch (commands[1]){
-                case "频道":
-                    TextChannel tc = (TextChannel) JKook.getHttpAPI().getChannel(commands[2]);
-                    tc.sendComponent(commands[3]);
-                    break;
-                case "用户":
-                    break;
-            }
-        }
+
     }
 
     @EventHandler
