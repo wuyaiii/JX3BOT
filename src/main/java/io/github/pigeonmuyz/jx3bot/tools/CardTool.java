@@ -97,7 +97,7 @@ public class CardTool {
                 case "日常":
                     initSaohua();
                     Type tempType = new TypeToken<Result<Daily>>(){}.getType();
-                    Result<Daily> rd   = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/current?server="+server), tempType);
+                    Result<Daily> rd   = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/active/current?server="+server), tempType);
                     Daily de = rd.getData();
                     card.add(new CardBuilder()
                             .setTheme(Theme.PRIMARY)
@@ -137,7 +137,7 @@ public class CardTool {
                 case "金价":
                     // @TODO 还没做其他服的！！
                     initSaohua();
-                    results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/trade/demon?server="+server+"&robot="+robot),newType);
+                    results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/trade/demon?server="+server+"&robot="+robot),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -166,7 +166,7 @@ public class CardTool {
                 case "花价":
                     // @TODO 还没做其他服的！！
                     initSaohua();
-                    Result<ReturnImageEntity> results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/home/flower?scale=2&server="+server+"&robot="+robot),newType);
+                    Result<ReturnImageEntity> results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/home/flower?scale=2&server="+server+"&robot="+robot),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -194,7 +194,7 @@ public class CardTool {
                 case "团队招募":
                 case "招募":
                     initSaohua();
-                    results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/member/recruit?server="+server+"&token="+token+"&robot="+robot),newType);
+                    results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/member/recruit?server="+server+"&token="+token+"&robot="+robot),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -226,7 +226,7 @@ public class CardTool {
                 case "行侠":
                     initSaohua();
 
-                    ChivalrousRequest cr = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/chivalrous?token="+token), ChivalrousRequest.class);
+                    ChivalrousRequest cr = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/active/chivalrous?token="+token), ChivalrousRequest.class);
                     card.add(new CardBuilder()
                             .setTheme(Theme.PRIMARY)
                             .setSize(Size.LG)
@@ -329,7 +329,7 @@ public class CardTool {
                 case "开服":
                     initSaohua();
                     tempType = new TypeToken<Result<ServerSwitch>>(){}.getType();
-                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/current?server="+server), tempType);
+                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/active/current?server="+server), tempType);
                     if (resultServer.getCode() == 200){
                         ServerSwitch ss = resultServer.getData();
                         card.add(new CardBuilder()
@@ -633,7 +633,7 @@ public class CardTool {
                 //region 物价相关实现
                 case "物价":
                     initSaohua();
-                    results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/trade/record?token="+token+"&name="+command[1]+"&robot="+robot),newType);
+                    results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/trade/record?token="+token+"&name="+command[1]+"&robot="+robot),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -661,9 +661,9 @@ public class CardTool {
                 case "奇遇":
                     initSaohua();
                     if (command.length>=3){
-                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/luck/adventure?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/luck/adventure?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
                     }else{
-                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/luck/adventure?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/luck/adventure?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
                     }
                     switch (results.getCode()){
                         case 200:
@@ -695,11 +695,11 @@ public class CardTool {
                 case "JJC":
                     initSaohua();
                     if (command.length==3){
-                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot+"&mode="+command[2]),newType);
+                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot+"&mode="+command[2]),newType);
                     }else if (command.length == 4){
-                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+command[3]+"&name="+command[1]+"&robot="+robot+"&mode="+command[2]),newType);
+                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+command[3]+"&name="+command[1]+"&robot="+robot+"&mode="+command[2]),newType);
                     }else if (command.length <3){
-                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
                     }
                     switch (results.getCode()){
                         case 200:
@@ -727,7 +727,7 @@ public class CardTool {
                 //region 金价相关实现
                 case "金价":
                     initSaohua();
-                    results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/trade/demon?server="+command[1]+"&robot="+robot),newType);
+                    results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/trade/demon?server="+command[1]+"&robot="+robot),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -766,9 +766,9 @@ public class CardTool {
                     Type tempType = new TypeToken<Result<ServerTeam>>(){}.getType();
                     Result<ServerTeam> rst = null;
                     if (command.length>=3){
-                        rst = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/member/recruit?server="+command[1]+"&keyword="+command[2]+"&token="+token), tempType);
+                        rst = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/member/recruit?server="+command[1]+"&keyword="+command[2]+"&token="+token), tempType);
                     }else{
-                        rst = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/member/recruit?server="+server+"&keyword="+command[1]+"&token="+token), tempType);
+                        rst = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/member/recruit?server="+server+"&keyword="+command[1]+"&token="+token), tempType);
                     }
                     ServerTeam st = rst.getData();
                     card.add(new CardBuilder()
@@ -810,9 +810,9 @@ public class CardTool {
                     initSaohua();
 
                     if (command.length>=3){
-                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/role/attribute?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/role/attribute?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
                     }else{
-                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/role/attribute?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/role/attribute?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
                     }
                     switch (results.getCode()){
                         case 200:
@@ -844,9 +844,9 @@ public class CardTool {
                 case "进度":
                     initSaohua();
                     if (command.length>=3){
-                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/role/teamCdList?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/role/teamCdList?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
                     }else{
-                        results = gson.fromJson(HttpTool.getData("https://www.jx3api.com/view/role/teamCdList?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/role/teamCdList?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
                     }
                     switch (results.getCode()) {
                         case 200:
@@ -875,7 +875,7 @@ public class CardTool {
                 case "开服":
                     initSaohua();
                     tempType = new TypeToken<Result<ServerSwitch>>(){}.getType();
-                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/active/current?server="+server), tempType);
+                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/active/current?server="+server), tempType);
                     if (resultServer.getCode() == 200){
                         ServerSwitch ss = resultServer.getData();
                         card.add(new CardBuilder()
@@ -918,9 +918,9 @@ public class CardTool {
             Result<Saohua> saohuaResult = null;
             //简单的随机判断
             if (Math.random()>0.5){
-                saohuaResult = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/saohua/content"),contextType);
+                saohuaResult = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/saohua/content"),contextType);
             }else{
-                saohuaResult = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/saohua/random"),contextType);
+                saohuaResult = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/saohua/random"),contextType);
             }
             //装填数据
             context = new ContextModule.Builder().add(new PlainTextElement(saohuaResult.getData().getText())).build();
