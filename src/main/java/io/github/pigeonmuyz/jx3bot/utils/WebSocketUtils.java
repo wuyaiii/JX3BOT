@@ -24,25 +24,45 @@ import javax.websocket.*;
 import java.net.URI;
 import java.net.http.WebSocket;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @ClientEndpoint
 public class WebSocketUtils implements WebSocket.Listener {
     private Session session;
+    private Gson gson = new Gson();
+    private URI uri;
 
-    Gson gson = new Gson();
-
-    URI uri;
+    private boolean wssStatus = false;
 
     public WebSocketUtils(URI uri){
         this.uri = uri;
-        new Thread(() -> {
-            try {
-                ClientManager client = ClientManager.createClient();
-                client.connectToServer(this, uri);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        connect(); // 建立初始连接
+    }
+
+    private void connect() {
+        try {
+            ClientManager client = ClientManager.createClient();
+            client.connectToServer(this, uri);
+            wssStatus = true;
+        } catch (Exception e) {
+            System.out.println("WebSocket连接失败: " + e.getMessage());
+            wssStatus = false;
+            scheduleReconnect(); // 连接失败后，开始定时重连
+        }
+    }
+
+    private void scheduleReconnect() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                connect(); // 定时器触发时，进行重连
+                if (wssStatus){
+                    timer.cancel();
+                }
             }
-        }).start();
+        }, 5000); // 重连间隔为5秒，你可以根据需要调整这个时间
     }
 
     @OnOpen
@@ -56,24 +76,8 @@ public class WebSocketUtils implements WebSocket.Listener {
     public void onClose(Session session) {
         System.out.println("WSS服务已经关闭");
         this.session = null;
-        new Thread(() -> {
-            while (true) {
-                try {
-                    ClientManager client = ClientManager.createClient();
-                    client.connectToServer(this, this.uri);
-                    break;
-                } catch (Exception e) {
-                    // 连接失败，等待一段时间后再次尝试
-                    System.out.println("WSS服务重新连接失败");
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException ex) {
-                        // 忽略中断异常
-                        System.out.println("WSS服务中断");
-                    }
-                }
-            }
-        }).start();
+        wssStatus = false;
+        scheduleReconnect(); // 连接关闭后，开始定时重连
     }
 
     @OnMessage
