@@ -53,6 +53,12 @@ public class MessageEvent implements Listener {
                     User user = JKook.getHttpAPI().getUser(commands[2]);
                     user.sendPrivateMessage(commands[3]);
                     break;
+                case "全部订阅者":
+                    for (String channelID :
+                            (List<String>) Main.settings.get("news")) {
+                        TextChannel tempTc = (TextChannel) JKook.getCore().getHttpAPI().getChannel(channelID);
+                        tempTc.sendComponent(commands[2]);
+                    };
             }
         }
             /*

@@ -2,12 +2,13 @@ package io.github.pigeonmuyz.jx3bot.entity.request;
 
 import io.github.pigeonmuyz.jx3bot.entity.Chivalrous;
 
+import java.util.List;
 import java.util.Map;
 
 public class ChivalrousRequest {
     int code;
     String msg;
-    Map<String, Chivalrous> data;
+    List<Chivalrous> data;
     Long time;
 
     public int getCode() {
@@ -26,11 +27,11 @@ public class ChivalrousRequest {
         this.msg = msg;
     }
 
-    public Map<String, Chivalrous> getData() {
+    public List<Chivalrous> getData() {
         return data;
     }
 
-    public void setData(Map<String, Chivalrous> data) {
+    public void setData(List<Chivalrous> data) {
         this.data = data;
     }
 

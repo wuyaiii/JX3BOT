@@ -5,27 +5,20 @@ public class Chivalrous {
     /**
      * 地图名
      */
-    String map;
-    /**
-     * 任务名称
-     */
-    String name;
+    String map_name;
     /**
      * 任务所属地图具体位置
      */
-    String site;
+    String event;
     /**
      * 获取结算方式
      */
-    String tasks;
+    String site;
     /**
      * 任务描述
      */
     String desc;
-    /**
-     * 任务备注
-     */
-    String note;
+    String icon;
     /**
      * 开始时间
      */
@@ -39,36 +32,12 @@ public class Chivalrous {
         this.id = id;
     }
 
-    public String getMap() {
-        return map;
-    }
-
-    public void setMap(String map) {
-        this.map = map;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getSite() {
         return site;
     }
 
     public void setSite(String site) {
         this.site = site;
-    }
-
-    public String getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(String tasks) {
-        this.tasks = tasks;
     }
 
     public String getDesc() {
@@ -79,19 +48,35 @@ public class Chivalrous {
         this.desc = desc;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
     public String getTime() {
         return time;
     }
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getMap_name() {
+        return map_name;
+    }
+
+    public void setMap_name(String map_name) {
+        this.map_name = map_name;
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

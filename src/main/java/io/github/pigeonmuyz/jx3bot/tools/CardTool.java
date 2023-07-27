@@ -9,6 +9,7 @@ import snw.jkook.message.component.card.MultipleCardComponent;
 import snw.jkook.message.component.card.Size;
 import snw.jkook.message.component.card.Theme;
 import snw.jkook.message.component.card.element.ImageElement;
+import snw.jkook.message.component.card.element.MarkdownElement;
 import snw.jkook.message.component.card.element.PlainTextElement;
 import snw.jkook.message.component.card.module.*;
 
@@ -31,10 +32,10 @@ public class CardTool {
      * 时间格式
      */
     static SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
-    /**
-     * 屏蔽词
-     */
-    static List<String> MaskedWords = (List<String>) settings.get("team_masked_words");
+//    /**
+//     * 屏蔽词
+//     */
+//    static List<String> MaskedWords = (List<String>) settings.get("team_masked_words");
     /**
      * 卡片集合
      */
@@ -49,9 +50,6 @@ public class CardTool {
      * 备注模块
      */
     static ContextModule context;
-
-    static String ticket = settings.get("jx3api_ticket").toString();
-    static String token = settings.get("jx3api_token").toString();
 
     /**
      * @Author 清晨
@@ -135,9 +133,8 @@ public class CardTool {
                 //endregion
                 //region 金价相关实现
                 case "金价":
-                    // @TODO 还没做其他服的！！
                     initSaohua();
-                    results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/trade/demon?server="+server+"&robot="+robot),newType);
+                    results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/trade/demon?server="+server),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -166,7 +163,7 @@ public class CardTool {
                 case "花价":
                     // @TODO 还没做其他服的！！
                     initSaohua();
-                    Result<ReturnImageEntity> results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/home/flower?scale=2&server="+server+"&robot="+robot),newType);
+                    Result<ReturnImageEntity> results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/home/flower?server="+server),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -194,7 +191,7 @@ public class CardTool {
                 case "团队招募":
                 case "招募":
                     initSaohua();
-                    results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/member/recruit?server="+server+"&token="+token+"&robot="+robot),newType);
+                    results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/member/recruit?server="+server),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -225,34 +222,28 @@ public class CardTool {
                 case "楚天社":
                 case "行侠":
                     initSaohua();
-
-                    ChivalrousRequest cr = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/active/chivalrous?token="+token), ChivalrousRequest.class);
+                    ChivalrousRequest cr = gson.fromJson(HttpTool.getData("http://localhost:8080/api/celebrities"), ChivalrousRequest.class);
                     card.add(new CardBuilder()
-                            .setTheme(Theme.PRIMARY)
+                            .setTheme(Theme.NONE)
                             .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("楚天行侠数据它来辣！")))
-                            .build());
-                    Chivalrous ce = cr.getData().get("now");
-
-                    card.add(new CardBuilder()
-                            .setTheme(Theme.PRIMARY)
+                            .addModule(new HeaderModule(new PlainTextElement("楚天社事件来咯！", false)))
+                            .newCard()
+                            .setTheme(Theme.DANGER)
                             .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("现在正在"+ce.getMap()+"行侠仗义捏！")))
-                            .addModule(new SectionModule(new PlainTextElement("事件："+ce.getDesc()),null,null))
-                            .addModule(new SectionModule(new PlainTextElement("地点："+ce.getMap()+"·"+ce.getSite()),null,null))
-                            .addModule(new SectionModule(new PlainTextElement("开始时间："+ce.getTime()),null,null))
-//                            .addModule(new CountdownModule(CountdownModule.Type.DAY, LocalDateTime.of(LocalDate.now(), LocalTime.parse(ce.getTime()).plusMinutes(4)).toInstant(ZoneOffset.ofHours(8)).toEpochMilli()))
-                            .build());
-//                    System.out.println( LocalDateTime.of(LocalDate.now(),LocalTime.parse(ce.getTime())).toEpochSecond(ZoneOffset.UTC));
-                    ce = cr.getData().get("next");
-                    card.add(new CardBuilder()
-                            .setTheme(Theme.PRIMARY)
+                            .addModule(new HeaderModule(new PlainTextElement("现在正在进行："+cr.getData().get(0).getDesc(), false)))
+                            .addModule(new SectionModule(new PlainTextElement(String.format("地点：%s · %s",cr.getData().get(0).getMap_name(),cr.getData().get(0).getSite())), null, null))
+                            .addModule(new SectionModule(new PlainTextElement(String.format("开始时间：%s",cr.getData().get(0).getTime())), null, null))
+                            .newCard()
+                            .setTheme(Theme.INFO)
                             .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("即将到"+ce.getMap()+"行侠仗义捏！")))
-                            .addModule(new SectionModule(new PlainTextElement("事件："+ce.getDesc()),null,null))
-                            .addModule(new SectionModule(new PlainTextElement("地点："+ce.getMap()+"·"+ce.getSite()),null,null))
-                            .addModule(new SectionModule(new PlainTextElement("开始时间："+ce.getTime()),null,null))
-//                            .addModule(new CountdownModule(CountdownModule.Type.DAY, LocalDateTime.of(LocalDate.now(), LocalTime.parse(ce.getTime()).plusMinutes(4)).toInstant(ZoneOffset.ofHours(8)).toEpochMilli()))
+                            .addModule(new HeaderModule(new PlainTextElement("即将进行：", false)))
+                            .addModule(new SectionModule(new PlainTextElement(String.format("事件1：%s",cr.getData().get(1).getDesc())), null, null))
+                            .addModule(new SectionModule(new PlainTextElement(String.format("地点：%s · %s",cr.getData().get(1).getMap_name(),cr.getData().get(1).getSite())), null, null))
+                            .addModule(new SectionModule(new PlainTextElement(String.format("开始时间：%s",cr.getData().get(1).getTime())), null, null))
+                            .addModule(DividerModule.INSTANCE)
+                            .addModule(new SectionModule(new PlainTextElement(String.format("事件2：%s",cr.getData().get(2).getDesc())), null, null))
+                            .addModule(new SectionModule(new PlainTextElement(String.format("地点：%s · %s",cr.getData().get(2).getMap_name(),cr.getData().get(2).getSite())), null, null))
+                            .addModule(new SectionModule(new PlainTextElement(String.format("开始时间：%s",cr.getData().get(2).getTime())), null, null))
                             .build());
                     break;
                 //endregion
@@ -264,12 +255,11 @@ public class CardTool {
                     card.add(new CardBuilder()
                             .setTheme(Theme.PRIMARY)
                             .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.1 （开发版本号：1033）")))
-                            .addModule(new SectionModule(new PlainTextElement("1. 部分功能惨招删除！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("2. 修复了部分指令会发不出的问题！！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("3. 加入消息推送服务辣，现在可以订阅开服监控之类的东西辣！"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("4. 增加了JJC战绩查询"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("5. 即将增加赞助辣！（只收取订阅服务所需+它的1%的费用，不使用诸恶、攻防类订阅服务就完全不要钱！）"), null, null))
+                            .addModule(new HeaderModule(new PlainTextElement("剑三鸽鸽 ver.Remake 2.0.1 （开发版本号：2030）")))
+                            .addModule(new SectionModule(new PlainTextElement("1. 修复了部分指令反馈错误的问题！！"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("2. 加入赞助辣！！！（你当然可以选择白嫖！我可以为爱发电！）"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("3. 加入了一些新功能（宏查询可以了！）"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("4. 重构了服务后端，已经开始着手准备安卓、iOS、Windows及Mac的查询小工具"), null, null))
                             .newCard()
                             .setTheme(Theme.NONE)
                             .setSize(Size.LG)
@@ -278,6 +268,7 @@ public class CardTool {
                     break;
                 //endregion
                 //region 帮助相关实现
+                //TODO: 还没做完！！
                 case "帮助":
                 case "功能":
                 case "指令":
@@ -287,9 +278,11 @@ public class CardTool {
                             .setSize(Size.LG)
                             .addModule(new HeaderModule(new PlainTextElement("通用类", false)))
                             .addModule(DividerModule.INSTANCE)
+                            .addModule(new SectionModule(new PlainTextElement("赞助指令：赞助"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("最新公告：公告"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("查询日常：日常"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("绑定服务器：绑定 [服务器(必选)]"), null, null))
-                            .addModule(new SectionModule(new PlainTextElement("物品价格：物价 [物品名称|物品别名(必选)]"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("外观价格：外观 [物品名称|物品别名(必选)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("角色装备：查询 [服务器(可选)] [玩家名字(必选)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("查询金价：金价 [服务器(可选)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("查询奇遇：奇遇 [服务器(可选)] [玩家名字(必选)]"), null, null))
@@ -301,25 +294,28 @@ public class CardTool {
                             .setSize(Size.LG)
                             .addModule(new HeaderModule(new PlainTextElement("PVE类", false)))
                             .addModule(DividerModule.INSTANCE)
-                            .addModule(new SectionModule(new PlainTextElement("查宏指令：宏 [心法前两字(必选)] 该功能目前是测试状态！"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("百战指令：百战"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("查宏指令：宏 [心法名（可以使用别称！！！）]"), null, null))
                             .newCard()
                             .setTheme(Theme.DANGER)
                             .setSize(Size.LG)
                             .addModule(new HeaderModule(new PlainTextElement("PVP类", false)))
                             .addModule(DividerModule.INSTANCE)
-                            .addModule(new SectionModule(new PlainTextElement("JJC战绩：JJC｜战绩 [玩家名(必选)] [模式，例如22｜33｜55(如果需要查其他服则必选)] [服务器(可选)]"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("JJC战绩：JJC｜战绩 [玩家名(必选)] [模式，例如22｜33｜55(必选)] [服务器(可选)]"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("战争沙盘：沙盘 [服务器(可选)]"), null, null))
                             .newCard()
                             .setTheme(Theme.SUCCESS)
                             .setSize(Size.LG)
                             .addModule(new HeaderModule(new PlainTextElement("PVX类", false)))
                             .addModule(DividerModule.INSTANCE)
                             .addModule(new SectionModule(new PlainTextElement("查询花价：花价 "), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("成就进度：成就 [服务器(机器人绑定过服务器的不需要输入)] [玩家名] [成就名或成就系列(例：沈剑心)]"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("楚天行侠：行侠|楚天社|楚天行侠"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("宠物游历：游历 [地图(必选)]"), null, null))
                             .newCard()
                             .setTheme(Theme.NONE)
                             .setSize(Size.LG)
-                            .addModule(new ContextModule.Builder().add(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.1", false)).build())
+                            .addModule(new ContextModule.Builder().add(new PlainTextElement("剑三鸽鸽 ver.Remake 2.0", false)).build())
                             .addModule(DividerModule.INSTANCE)
                             .addModule(context)
                             .build());
@@ -329,7 +325,7 @@ public class CardTool {
                 case "开服":
                     initSaohua();
                     tempType = new TypeToken<Result<ServerSwitch>>(){}.getType();
-                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/active/current?server="+server), tempType);
+                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("http://localhost:8080/api/serverCheck?server="+server), tempType);
                     if (resultServer.getCode() == 200){
                         ServerSwitch ss = resultServer.getData();
                         card.add(new CardBuilder()
@@ -339,7 +335,7 @@ public class CardTool {
                                 .newCard()
                                 .setTheme(Theme.NONE)
                                 .setSize(Size.LG)
-                                .addModule(new ContextModule.Builder().add(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.2", false)).build())
+                                .addModule(new ContextModule.Builder().add(new PlainTextElement("剑三鸽鸽 ver.Remake 2.0", false)).build())
                                 .addModule(DividerModule.INSTANCE)
                                 .addModule(context)
                                 .build());
@@ -351,6 +347,107 @@ public class CardTool {
                                 .build());
                     }
                     break;
+                //endregion
+                //region 百战相关实现
+                case "百战":
+                    initSaohua();
+                    results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/active/monster"),newType);
+                    switch (results.getCode()){
+                        case 200:
+                            imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new ImageGroupModule(imagesList))
+                                    .newCard()
+                                    .setTheme(Theme.NONE)
+                                    .setSize(Size.LG)
+                                    .addModule(context)
+                                    .build());
+                            break;
+                        default:
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.DANGER)
+                                    .setSize(Size.LG)
+                                    .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"),null,null))
+                                    .build());
+                            break;
+                    }
+                    break;
+                //endregion
+                //region 沙盘相关实现
+                case "沙盘":
+                    initSaohua();
+                    results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/server/sand?server="+server+"&desc=我只是个平凡的鸽鸽罢了"),newType);
+                    switch (results.getCode()){
+                        case 200:
+                            imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new ImageGroupModule(imagesList))
+                                    .newCard()
+                                    .setTheme(Theme.NONE)
+                                    .setSize(Size.LG)
+                                    .addModule(context)
+                                    .build());
+                            break;
+                        default:
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.DANGER)
+                                    .setSize(Size.LG)
+                                    .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"),null,null))
+                                    .build());
+                            break;
+                    }
+                    break;
+                //endregion
+                //region 公告相关实现
+                case "公告":
+                    initSaohua();
+                    results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/web/news/announce"),newType);
+                    switch (results.getCode()){
+                        case 200:
+                            imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new ImageGroupModule(imagesList))
+                                    .newCard()
+                                    .setTheme(Theme.NONE)
+                                    .setSize(Size.LG)
+                                    .addModule(context)
+                                    .build());
+                            break;
+                        default:
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.DANGER)
+                                    .setSize(Size.LG)
+                                    .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"),null,null))
+                                    .build());
+                            break;
+                    }
+                    break;
+                //endregion
+                //region 赞助相关实现
+                case "捐赠":
+                case "赞助":
+                    initSaohua();
+                    card.add(new CardBuilder()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule("赞助我继续持久运营！！！"))
+                            .addModule(new SectionModule(new MarkdownElement("`请不要赞助超过市面上机器人价格的数额哦<br/>我写的东西不如各位大佬的<br/>如果需要诸恶推送，请大佬们使用（建议 1）指令，如果人多我将会用赞助费用去整这个`")))
+                            .addModule(DividerModule.INSTANCE)
+                            .addModule(new SectionModule(new MarkdownElement("为了安全这里使用的超链接！如果你需要二维码可以私聊我拿！")))
+                            .addModule(new SectionModule(new MarkdownElement("[手机支付宝请点我](https://qr.alipay.com/fkx11820uxa8jopmhra2t3a)")))
+                            .addModule(new SectionModule(new MarkdownElement("[手机微信点我](wxp://f2f0oCtITFnGlOz8ob32HoRT55B4sM26PQhrmaTAHhZqAi4)")))
+                            .newCard()
+                            .setTheme(Theme.NONE)
+                            .setSize(Size.LG)
+                            .addModule(new SectionModule(new PlainTextElement("记得备注写好自己的KOOK或者游戏内昵称哦"),null,null))
+                            .addModule(new SectionModule(new PlainTextElement("后面会加一个赞助名单感谢各位支持的大佬们！"),null,null))
+                            .build());
                 //endregion
             }
             imagesList.clear();
@@ -630,10 +727,10 @@ public class CardTool {
                     }
                     break;
                 //endregion
-                //region 物价相关实现
-                case "物价":
+                //region 外观相关实现
+                case "外观":
                     initSaohua();
-                    results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/trade/record?token="+token+"&name="+command[1]+"&robot="+robot),newType);
+                    results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/trade/record?name="+command[1]),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -661,9 +758,9 @@ public class CardTool {
                 case "奇遇":
                     initSaohua();
                     if (command.length>=3){
-                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/luck/adventure?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/luck/adventure?server="+command[1]+"&name="+command[2]+"&filter=1"),newType);
                     }else{
-                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/luck/adventure?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/luck/adventure?server="+server+"&name="+command[1]+"&filter=1"),newType);
                     }
                     switch (results.getCode()){
                         case 200:
@@ -693,13 +790,12 @@ public class CardTool {
                 case "名剑":
                 case "战绩":
                 case "JJC":
+                    // JJC XXXX XXXX 22
                     initSaohua();
-                    if (command.length==3){
-                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot+"&mode="+command[2]),newType);
-                    }else if (command.length == 4){
-                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+command[3]+"&name="+command[1]+"&robot="+robot+"&mode="+command[2]),newType);
-                    }else if (command.length <3){
-                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/match/recent?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
+                    if (command.length >= 4){
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/match/recent?server="+command[1]+"&name="+command[2]+"&robot="+robot+"&mode="+command[3]),newType);
+                    }else if (command.length <4){
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/match/recent?server="+server+"&name="+command[1]+"&mode="+command[2]),newType);
                     }
                     switch (results.getCode()){
                         case 200:
@@ -727,7 +823,7 @@ public class CardTool {
                 //region 金价相关实现
                 case "金价":
                     initSaohua();
-                    results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/trade/demon?server="+command[1]+"&robot="+robot),newType);
+                    results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/trade/demon?server="+command[1]),newType);
                     switch (results.getCode()){
                         case 200:
                             imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
@@ -759,60 +855,91 @@ public class CardTool {
                     break;
                 //endregion
                 //region 团队招募相关实现
-                // @TODO 团队招募未更新！！！
                 case "团队招募":
                 case "招募":
                     initSaohua();
-                    Type tempType = new TypeToken<Result<ServerTeam>>(){}.getType();
-                    Result<ServerTeam> rst = null;
                     if (command.length>=3){
-                        rst = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/member/recruit?server="+command[1]+"&keyword="+command[2]+"&token="+token), tempType);
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/member/recruit?server="+command[1]+"&keyword="+command[2]),newType);
                     }else{
-                        rst = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/member/recruit?server="+server+"&keyword="+command[1]+"&token="+token), tempType);
-                    }
-                    ServerTeam st = rst.getData();
-                    card.add(new CardBuilder()
-                            .setTheme(Theme.PRIMARY)
-                            .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement(server+"目前的团队招募来辣！已经帮你排除掉金团辣！",false)))
-                            .addModule(new HeaderModule(new PlainTextElement("以下是有关"+command[1]+"的团队招募信息辣！",false)))
-                            .newCard()
-                            .setTheme(Theme.NONE)
-                            .setSize(Size.LG)
-                            .addModule(context)
-                            .build());
-                    for (TeamActivity ta:
-                            st.getData()) {
-                        boolean mask = false;
-                        for (String result :
-                                MaskedWords) {
-                            if (ta.getContent().contains(result)) {
-                                mask = true;
-                            }
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/member/recruit?server="+command[1]),newType);
+                        if (results.getCode() != 200){
+                            results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/member/recruit?server="+server+"&keyword="+command[1]),newType);
                         }
-                        if (mask){
-                        }else{
+                    }
+                    switch (results.getCode()){
+                        case 200:
+                            imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
                             card.add(new CardBuilder()
                                     .setTheme(Theme.PRIMARY)
                                     .setSize(Size.LG)
-                                    .addModule(new SectionModule(new PlainTextElement("活动名称："+ta.getActivity(),false),null,null))
-                                    .addModule(new SectionModule(new PlainTextElement("最低要求等级："+ta.getLevel(),false),null,null))
-                                    .addModule(new SectionModule(new PlainTextElement("队长："+ta.getLeader(),false),null,null))
-                                    .addModule(new SectionModule(new PlainTextElement("人数："+ta.getNumber()+"/"+ta.getMaxNumber(),false),null,null))
-                                    .addModule(new SectionModule(new PlainTextElement("招募信息："+ta.getContent(),false),null,null))
+                                    .addModule(new HeaderModule(new PlainTextElement("目前的团队招募来辣！",false)))
+                                    .addModule(new ImageGroupModule(imagesList))
+                                    .newCard()
+                                    .setTheme(Theme.NONE)
+                                    .setSize(Size.LG)
+                                    .addModule(context)
                                     .build());
-                        }
+                            break;
+                        default:
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.DANGER)
+                                    .setSize(Size.LG)
+                                    .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"),null,null))
+                                    .build());
+                            break;
                     }
                     break;
+                    //region 过时的团队招募样式
+//                    Type tempType = new TypeToken<Result<ServerTeam>>(){}.getType();
+//                    Result<ServerTeam> rst = null;
+//                    if (command.length>=3){
+//                        rst = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/member/recruit?server="+command[1]+"&keyword="+command[2]+"&token="+token), tempType);
+//                    }else{
+//                        rst = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/member/recruit?server="+server+"&keyword="+command[1]+"&token="+token), tempType);
+//                    }
+//                    ServerTeam st = rst.getData();
+//                    card.add(new CardBuilder()
+//                            .setTheme(Theme.PRIMARY)
+//                            .setSize(Size.LG)
+//                            .addModule(new HeaderModule(new PlainTextElement(server+"目前的团队招募来辣！已经帮你排除掉金团辣！",false)))
+//                            .addModule(new HeaderModule(new PlainTextElement("以下是有关"+command[1]+"的团队招募信息辣！",false)))
+//                            .newCard()
+//                            .setTheme(Theme.NONE)
+//                            .setSize(Size.LG)
+//                            .addModule(context)
+//                            .build());
+//                    for (TeamActivity ta:
+//                            st.getData()) {
+//                        boolean mask = false;
+//                        for (String result :
+//                                MaskedWords) {
+//                            if (ta.getContent().contains(result)) {
+//                                mask = true;
+//                            }
+//                        }
+//                        if (mask){
+//                        }else{
+//                            card.add(new CardBuilder()
+//                                    .setTheme(Theme.PRIMARY)
+//                                    .setSize(Size.LG)
+//                                    .addModule(new SectionModule(new PlainTextElement("活动名称："+ta.getActivity(),false),null,null))
+//                                    .addModule(new SectionModule(new PlainTextElement("最低要求等级："+ta.getLevel(),false),null,null))
+//                                    .addModule(new SectionModule(new PlainTextElement("队长："+ta.getLeader(),false),null,null))
+//                                    .addModule(new SectionModule(new PlainTextElement("人数："+ta.getNumber()+"/"+ta.getMaxNumber(),false),null,null))
+//                                    .addModule(new SectionModule(new PlainTextElement("招募信息："+ta.getContent(),false),null,null))
+//                                    .build());
+//                        }
+//                    }
+//                    break;
+                    //endregion
                 //endregion
                 //region 装备查询
                 case "查询":
                     initSaohua();
-
                     if (command.length>=3){
-                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/role/attribute?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/role/attribute?server="+command[1]+"&name="+command[2]),newType);
                     }else{
-                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/role/attribute?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/role/attribute?server="+server+"&name="+command[1]),newType);
                     }
                     switch (results.getCode()){
                         case 200:
@@ -844,9 +971,9 @@ public class CardTool {
                 case "进度":
                     initSaohua();
                     if (command.length>=3){
-                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/role/teamCdList?token="+token+"&ticket="+ticket+"&server="+command[1]+"&name="+command[2]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/role/teamCdList?server="+command[1]+"&name="+command[2]),newType);
                     }else{
-                        results = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/view/role/teamCdList?token="+token+"&ticket="+ticket+"&server="+server+"&name="+command[1]+"&robot="+robot),newType);
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/teamCdList?server="+server+"&name="+command[1]),newType);
                     }
                     switch (results.getCode()) {
                         case 200:
@@ -874,18 +1001,18 @@ public class CardTool {
                 //region 开服状态查询
                 case "开服":
                     initSaohua();
-                    tempType = new TypeToken<Result<ServerSwitch>>(){}.getType();
-                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/active/current?server="+server), tempType);
+                    Type tempType = new TypeToken<Result<ServerSwitch>>(){}.getType();
+                    Result<ServerSwitch> resultServer = gson.fromJson(HttpTool.getData("http://localhost:8080/api/serverCheck?server="+command[1]), tempType);
                     if (resultServer.getCode() == 200){
                         ServerSwitch ss = resultServer.getData();
                         card.add(new CardBuilder()
                                 .setTheme(Theme.NONE)
                                 .setSize(Size.LG)
-                                .addModule(new HeaderModule(new PlainTextElement(server+" 当前状态："+ ss.getStatus(), false)))
+                                .addModule(new HeaderModule(new PlainTextElement(command[1]+" 当前状态："+ ss.getStatus(), false)))
                                 .newCard()
                                 .setTheme(Theme.NONE)
                                 .setSize(Size.LG)
-                                .addModule(new ContextModule.Builder().add(new PlainTextElement("剑三鸽鸽 ver.Remake 1.0.2", false)).build())
+                                .addModule(new ContextModule.Builder().add(new PlainTextElement("剑三鸽鸽 ver.Remake 2.0", false)).build())
                                 .addModule(DividerModule.INSTANCE)
                                 .addModule(context)
                                 .build());
@@ -894,6 +1021,116 @@ public class CardTool {
                                 .setSize(Size.LG)
                                 .setTheme(Theme.DANGER)
                                 .addModule(new HeaderModule(new PlainTextElement("服务器未响应")))
+                                .build());
+                    }
+                    break;
+                //endregion
+                //region 烟花相关实现
+                case "烟花":
+                    initSaohua();
+                    if (command.length>=3){
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/watch/record?server="+command[1]+"&name="+command[2]),newType);
+                    }else{
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/watch/record?server="+server+"&name="+command[1]),newType);
+                    }
+                    switch (results.getCode()){
+                        case 200:
+                            imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new ImageGroupModule(imagesList))
+                                    .newCard()
+                                    .setTheme(Theme.NONE)
+                                    .setSize(Size.LG)
+                                    .addModule(context)
+                                    .build());
+                            break;
+                        default:
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.DANGER)
+                                    .setSize(Size.LG)
+                                    .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"),null,null))
+                                    .build());
+                            break;
+                    }
+                    break;
+                //endregion
+                //region 沙盘相关实现
+                case "沙盘":
+                    initSaohua();
+                    results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/server/sand?server="+command[1]+"&desc=我只是个平凡的鸽鸽罢了"),newType);
+                    switch (results.getCode()){
+                        case 200:
+                            imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new ImageGroupModule(imagesList))
+                                    .newCard()
+                                    .setTheme(Theme.NONE)
+                                    .setSize(Size.LG)
+                                    .addModule(context)
+                                    .build());
+                            break;
+                        default:
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.DANGER)
+                                    .setSize(Size.LG)
+                                    .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"),null,null))
+                                    .build());
+                            break;
+                    }
+                    break;
+                //endregion
+                //region 成就相关实现
+                case "成就":
+                    initSaohua();
+                    if(command.length >=4){
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/role/achievement?server="+command[1]+"&role="+command[2]+"&name="+command[3]),newType);
+                    }else{
+                        results = gson.fromJson(HttpTool.getData("http://localhost:8080/image/api/role/achievement?server="+server+"&role="+command[1]+"&name="+command[2]),newType);
+                    }
+                    switch (results.getCode()){
+                        case 200:
+                            imagesList.add(new ImageElement(results.getData().getUrl(),"剑三咕咕",false));
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new ImageGroupModule(imagesList))
+                                    .newCard()
+                                    .setTheme(Theme.NONE)
+                                    .setSize(Size.LG)
+                                    .addModule(context)
+                                    .build());
+                            break;
+                        default:
+                            card.add(new CardBuilder()
+                                    .setTheme(Theme.DANGER)
+                                    .setSize(Size.LG)
+                                    .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"),null,null))
+                                    .build());
+                            break;
+                    }
+                    break;
+                //endregion
+                //region 宏相关实现
+                case "宏":
+                    Type context = new TypeToken<Result<MacroJx3api>>(){}.getType();
+                    Result<MacroJx3api> macroJx3apiResult = gson.fromJson(HttpTool.getData("http://localhost:8080/api/macros/jx3api?kungfu="+command[1]),context);
+                    if (macroJx3apiResult.getCode() == 200){
+                        MacroJx3api macroJx3api = macroJx3apiResult.getData();
+                        card.add(new CardBuilder()
+                                .setTheme(Theme.SUCCESS)
+                                .setSize(Size.LG)
+                                .addModule(new HeaderModule(new PlainTextElement(command[1]+"宏来了！！！")))
+                                .addModule(new SectionModule(new PlainTextElement(macroJx3api.getContext()),null,null))
+                                .build());
+                    }else{
+                        card.add(new CardBuilder()
+                                .setTheme(Theme.DANGER)
+                                .setSize(Size.LG)
+                                .addModule(new SectionModule(new PlainTextElement("参数错误！或者服务器未响应！"),null,null))
                                 .build());
                     }
                     break;
@@ -918,12 +1155,11 @@ public class CardTool {
             Result<Saohua> saohuaResult = null;
             //简单的随机判断
             if (Math.random()>0.5){
-                saohuaResult = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/saohua/content"),contextType);
+                context = new ContextModule.Builder().add(new PlainTextElement("如果你觉得好用的话，可以输入：捐赠  来支持我继续运营哦")).build();
             }else{
-                saohuaResult = gson.fromJson(HttpTool.getData("https://v7.jx3api.com/data/saohua/random"),contextType);
+                saohuaResult = gson.fromJson(HttpTool.getData("https://www.jx3api.com/data/saohua/random"),contextType);
+                context = new ContextModule.Builder().add(new PlainTextElement(saohuaResult.getData().getText())).build();
             }
-            //装填数据
-            context = new ContextModule.Builder().add(new PlainTextElement(saohuaResult.getData().getText())).build();
         }catch(Exception e){
             e.printStackTrace();
         }

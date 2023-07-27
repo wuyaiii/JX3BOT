@@ -22,6 +22,15 @@ public class HttpTool {
     public static Response get(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
+                .header("computerId","MTAzLjE0OC43Mi4xLUI4NS1IRDM=")
+                .build();
+        Response response = client.newCall(request).execute();
+        return response;
+    }
+
+    public static Response getDefault(String url) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
                 .build();
         Response response = client.newCall(request).execute();
         return response;
