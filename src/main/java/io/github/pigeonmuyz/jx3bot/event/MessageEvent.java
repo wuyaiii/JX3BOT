@@ -17,6 +17,7 @@ import snw.jkook.message.component.card.MultipleCardComponent;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,11 +55,19 @@ public class MessageEvent implements Listener {
                     user.sendPrivateMessage(commands[3]);
                     break;
                 case "全部订阅者":
-                    for (String channelID :
-                            (List<String>) Main.settings.get("news")) {
-                        TextChannel tempTc = (TextChannel) JKook.getCore().getHttpAPI().getChannel(channelID);
-                        tempTc.sendComponent(commands[2]);
-                    };
+                    // 使用Iterator来安全地删除元素
+                    Iterator<String> iterator = ((List<String>) Main.settings.get("news")).iterator();
+                    while (iterator.hasNext()) {
+                        String channelID = iterator.next();
+                        try {
+                            TextChannel tempTc = (TextChannel) JKook.getCore().getHttpAPI().getChannel(channelID);
+                            tempTc.sendComponent(commands[2]);
+                        } catch (Exception e) {
+                            System.out.println("发送失败");
+                            // 使用Iterator的remove()方法来删除元素，避免并发修改异常
+                            iterator.remove();
+                        }
+                    }
             }
         }
             /*

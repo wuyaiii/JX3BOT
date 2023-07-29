@@ -23,6 +23,7 @@ import snw.jkook.message.component.card.module.SectionModule;
 import javax.websocket.*;
 import java.net.URI;
 import java.net.http.WebSocket;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -156,7 +157,7 @@ public class WebSocketUtils implements WebSocket.Listener {
                         .addModule(new SectionModule(new PlainTextElement(fp.getTitle()),null,null))
                         .addModule(new SectionModule(new PlainTextElement("来自 "+fp.getName()+"吧"),null,null))
                         .addModule(new SectionModule(new PlainTextElement("时间："+fp.getDate()),null,null))
-                        .addModule(new SectionModule(new MarkdownElement("[原文传送门🚪]("+fp.getUri()+")")))
+                        .addModule(new SectionModule(new MarkdownElement("[原文传送门🚪]("+fp.getUri()+")   [仅看楼主快速🚪]("+fp.getUri()+"?see_lz=1)]")))
                         .build();
                 break;
             default:
@@ -173,13 +174,33 @@ public class WebSocketUtils implements WebSocket.Listener {
         }
 
         if (mcc != null){
-            for (String channelID :
-                    (List<String>) Main.settings.get(messageType)) {
-                TextChannel tc = (TextChannel) JKook.getCore().getHttpAPI().getChannel(channelID);
-                tc.sendComponent(mcc);
+            // 使用Iterator来安全地删除元素
+            Iterator<String> iterator = ((List<String>) Main.settings.get(messageType)).iterator();
+            while (iterator.hasNext()) {
+                String channelID = iterator.next();
+                try {
+                    TextChannel tempTc = (TextChannel) JKook.getCore().getHttpAPI().getChannel(channelID);
+                    tempTc.sendComponent(mcc);
+                } catch (Exception e) {
+                    System.out.println("发送失败");
+                    // 使用Iterator的remove()方法来删除元素，避免并发修改异常
+                    iterator.remove();
+                }
             }
-        }else {
-
+            /**
+             * 上古遗留问题
+             */
+//            for (String channelID :
+//                    (List<String>) Main.settings.get(messageType)) {
+//                //尝试发送
+//                try{
+//                    TextChannel tc = (TextChannel) JKook.getCore().getHttpAPI().getChannel(channelID);
+//                    tc.sendComponent(mcc);
+//                }catch (Exception e){
+//                    //非正常用户排除
+//                    ((List<?>) Main.settings.get(messageType)).remove(channelID);
+//                }
+//            }
         }
     }
 

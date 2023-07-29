@@ -1,5 +1,5 @@
 name: JX3BOT-Remark
 version: 1.0.0-Re
 authors: ["PigeonMuyz"]
-api-version: 0.49.0
+api-version: 0.49.1
 main: io.github.pigeonmuyz.jx3bot.Main

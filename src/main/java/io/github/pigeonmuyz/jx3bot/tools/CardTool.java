@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.github.pigeonmuyz.jx3bot.entity.*;
 import io.github.pigeonmuyz.jx3bot.entity.request.ChivalrousRequest;
+import snw.jkook.JKook;
 import snw.jkook.message.component.card.CardBuilder;
 import snw.jkook.message.component.card.MultipleCardComponent;
 import snw.jkook.message.component.card.Size;
@@ -13,6 +14,7 @@ import snw.jkook.message.component.card.element.MarkdownElement;
 import snw.jkook.message.component.card.element.PlainTextElement;
 import snw.jkook.message.component.card.module.*;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.temporal.Temporal;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static io.github.pigeonmuyz.jx3bot.Main.dataFolder;
 import static io.github.pigeonmuyz.jx3bot.Main.settings;
 
 public class CardTool {
@@ -66,10 +69,18 @@ public class CardTool {
             switch(command){
                 //region 订阅WSS
                 case "全部订阅":
-                case "订阅":
+//                case "订阅":
                 case "订阅全部":
                     initSaohua();
                     List<String> newChannelList = (List<String>)settings.get("news");
+                    if (newChannelList.contains(channelID)){
+                        card.add(new CardBuilder()
+                                .setSize(Size.LG)
+                                .setTheme(Theme.DANGER)
+                                .addModule(new SectionModule(new PlainTextElement("当前频道已经订阅过了！"), null, null))
+                                .build());
+                        return card;
+                    }
                     newChannelList.add(channelID);
                     settings.put("news",newChannelList);
                     newChannelList = (List<String>)settings.get("version_fix");
@@ -78,6 +89,9 @@ public class CardTool {
                     newChannelList = (List<String>)settings.get("server_status");
                     newChannelList.add(channelID);
                     settings.put("server_status",newChannelList);
+                    newChannelList = (List<String>)settings.get("forum_post");
+                    newChannelList.add(channelID);
+                    settings.put("forum_post",newChannelList);
                     if (channelID != null){
                         card.add(new CardBuilder()
                                 .setSize(Size.LG)
@@ -255,11 +269,12 @@ public class CardTool {
                     card.add(new CardBuilder()
                             .setTheme(Theme.PRIMARY)
                             .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("剑三鸽鸽 ver.Remake 2.0.1 （开发版本号：2030）")))
+                            .addModule(new HeaderModule(new PlainTextElement("剑三鸽鸽 ver.Remake 2.0.2 （开发版本号：2060）")))
                             .addModule(new SectionModule(new PlainTextElement("1. 修复了部分指令反馈错误的问题！！"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("2. 加入赞助辣！！！（你当然可以选择白嫖！我可以为爱发电！）"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("3. 加入了一些新功能（宏查询可以了！）"), null, null))
                             .addModule(new SectionModule(new PlainTextElement("4. 重构了服务后端，已经开始着手准备安卓、iOS、Windows及Mac的查询小工具"), null, null))
+                            .addModule(new SectionModule(new PlainTextElement("5. 将WSS的重大错误解决了（感谢KOOK用户@Kirito/小顾的配合！）"), null, null))
                             .newCard()
                             .setTheme(Theme.NONE)
                             .setSize(Size.LG)
@@ -433,15 +448,16 @@ public class CardTool {
                 case "捐赠":
                 case "赞助":
                     initSaohua();
+
+                    imagesList.add(new ImageElement(JKook.getCore().getHttpAPI().uploadFile(new File(dataFolder+"/alipay.jpg")),"剑三咕咕",false));
+                    imagesList.add(new ImageElement(JKook.getCore().getHttpAPI().uploadFile(new File(dataFolder+"/weixin.jpg")),"剑三咕咕",false));
                     card.add(new CardBuilder()
                             .setTheme(Theme.PRIMARY)
                             .setSize(Size.LG)
                             .addModule(new HeaderModule("赞助我继续持久运营！！！"))
-                            .addModule(new SectionModule(new MarkdownElement("`请不要赞助超过市面上机器人价格的数额哦<br/>我写的东西不如各位大佬的<br/>如果需要诸恶推送，请大佬们使用（建议 1）指令，如果人多我将会用赞助费用去整这个`")))
+                            .addModule(new SectionModule(new MarkdownElement("请不要赞助超过市面上机器人价格的数额哦\n我写的东西不如各位大佬的\n如果需要诸恶推送，请大佬们使用（建议 1）指令，如果人多我将会用赞助费用(如果足够的话)去整这个")))
                             .addModule(DividerModule.INSTANCE)
-                            .addModule(new SectionModule(new MarkdownElement("为了安全这里使用的超链接！如果你需要二维码可以私聊我拿！")))
-                            .addModule(new SectionModule(new MarkdownElement("[手机支付宝请点我](https://qr.alipay.com/fkx11820uxa8jopmhra2t3a)")))
-                            .addModule(new SectionModule(new MarkdownElement("[手机微信点我](wxp://f2f0oCtITFnGlOz8ob32HoRT55B4sM26PQhrmaTAHhZqAi4)")))
+                            .addModule(new ImageGroupModule(imagesList))
                             .newCard()
                             .setTheme(Theme.NONE)
                             .setSize(Size.LG)
@@ -452,7 +468,8 @@ public class CardTool {
             }
             imagesList.clear();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("报错了，当前用户输入指令："+command);
+            System.out.println(e.getMessage());
             card.add(new CardBuilder()
                     .setSize(Size.LG)
                     .setTheme(Theme.DANGER)
@@ -1138,12 +1155,13 @@ public class CardTool {
             }
             imagesList.clear();
         }catch(Exception e){
+            System.out.println("报错了，当前用户输入指令："+command);
+            System.out.println(e.getMessage());
             card.add(new CardBuilder()
                     .setSize(Size.LG)
                     .setTheme(Theme.DANGER)
                     .addModule(new HeaderModule(new PlainTextElement("坏起来了！你要用的这个查询结果出不来了！试着换一个说法或者找鸽子来看看机器人是不是出毛病了！")))
                     .build());
-            e.printStackTrace();
         }
         return card;
     }
