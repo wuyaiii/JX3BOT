@@ -3,15 +3,13 @@ package io.github.pigeonmuyz.jx3bot.event;
 import com.google.gson.Gson;
 import io.github.pigeonmuyz.jx3bot.Main;
 import io.github.pigeonmuyz.jx3bot.tools.CardTool;
-import io.github.pigeonmuyz.jx3bot.tools.HttpTool;
-import snw.jkook.Core;
+
 import snw.jkook.JKook;
 import snw.jkook.entity.User;
 import snw.jkook.entity.channel.TextChannel;
 import snw.jkook.event.EventHandler;
 import snw.jkook.event.Listener;
 import snw.jkook.event.channel.ChannelMessageEvent;
-import snw.jkook.event.pm.PrivateMessageEvent;
 import snw.jkook.event.pm.PrivateMessageReceivedEvent;
 import snw.jkook.message.component.card.MultipleCardComponent;
 
@@ -20,6 +18,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import static io.github.pigeonmuyz.jx3bot.Main.settings;
 
@@ -55,19 +54,20 @@ public class MessageEvent implements Listener {
                     user.sendPrivateMessage(commands[3]);
                     break;
                 case "全部订阅者":
-                    // 使用Iterator来安全地删除元素
                     Iterator<String> iterator = ((List<String>) Main.settings.get("news")).iterator();
+                    List<String> elementsToRemove = new ArrayList<>(); // 用于暂存需要删除的元素
                     while (iterator.hasNext()) {
                         String channelID = iterator.next();
                         try {
                             TextChannel tempTc = (TextChannel) JKook.getCore().getHttpAPI().getChannel(channelID);
                             tempTc.sendComponent(commands[2]);
                         } catch (Exception e) {
-                            System.out.println("发送失败");
-                            // 使用Iterator的remove()方法来删除元素，避免并发修改异常
-                            iterator.remove();
+                            System.out.println("发送失败，当前恶心人的频道ID："+channelID);
+                            elementsToRemove.add(channelID); // 将需要删除的元素添加到列表中
                         }
                     }
+                    // 循环结束后删除需要删除的元素
+                    ((List<String>) Main.settings.get("news")).removeAll(elementsToRemove);
             }
         }
             /*
